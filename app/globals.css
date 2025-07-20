@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&display=swap');
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+}
+
+/* Socialist/Working Class inspired typography */
+.socialist-headline {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #dc2626;
+}
+
+.socialist-subhead {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.socialist-body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* Custom styles for the news website */
+.article-content {
+  @apply prose prose-lg max-w-none;
+}
+
+.article-content blockquote {
+  @apply border-l-4 border-thread-navy;
+}
+
+.article-content a {
+  @apply text-thread-navy hover:text-thread-dark-navy;
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.article-content h1 {
+  @apply text-3xl font-bold mb-4 text-navy-900 font-serif;
+}
+
+.article-content h2 {
+  @apply text-2xl font-semibold mb-3 text-navy-800 font-serif;
+}
+
+.article-content h3 {
+  @apply text-xl font-medium mb-2 text-navy-700;
+}
+
+.article-content p {
+  @apply mb-4 text-navy-700 leading-relaxed;
+}
+
+.article-content blockquote {
+  @apply border-l-4 border-thread-navy pl-4 italic text-navy-600 my-4 bg-navy-50 py-2;
+}
+
+.article-content ul, .article-content ol {
+  @apply mb-4 pl-6;
+}
+
+.article-content li {
+  @apply mb-2 text-navy-700;
+}
+
+.article-content a {
+  @apply text-thread-navy hover:text-thread-dark-navy underline;
+}
+
+/* AdSense responsive styles */
+.adsense-container {
+  @apply w-full flex justify-center my-8;
+}
+
+/* Quill editor custom styles */
+.ql-editor {
+  min-height: 300px;
+}
+
+.ql-toolbar {
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+
+.ql-container {
+  border-bottom: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
