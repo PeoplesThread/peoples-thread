@@ -1,6 +1,6 @@
-# Progressive Voice - Leftist News Website
+# Peoples Thread - Progressive News Website
 
-A modern news website built with Next.js that creates AI-written news articles from a leftist perspective, featuring both manual content creation and automated content generation with Google AdSense integration.
+A modern news website built with Next.js that delivers progressive news and analysis, featuring comprehensive content management and Google AdSense integration.
 
 ## Features
 
@@ -9,11 +9,11 @@ A modern news website built with Next.js that creates AI-written news articles f
 - **Social Justice & Civil Rights** - Fighting systemic oppression and inequality
 - **Labor & Workers' Rights** - Supporting workers' rights and union organizing
 
-### 🤖 AI Content Generation
-- **Manual AI Generation** - Create articles on-demand with custom prompts
-- **Scheduled Content** - Automated article generation on schedule (daily, weekly, monthly)
-- **Progressive Perspective** - AI trained with leftist prompts for authentic progressive content
-- **Content Review** - All AI-generated content can be edited before publication
+### ⚡ Content Automation
+- **Scheduled Publishing** - Schedule articles for automatic publication
+- **Content Planning** - Plan and organize content calendar
+- **Progressive Focus** - Curated content from a progressive perspective
+- **Editorial Review** - All content reviewed before publication
 
 ### 📝 Content Management
 - **Rich Text Editor** - Full-featured article creation with ReactQuill
@@ -29,8 +29,7 @@ A modern news website built with Next.js that creates AI-written news articles f
 
 ### 📊 Admin Features
 - **Article Management** - Create, edit, publish, and delete articles
-- **AI Generator Interface** - Generate content with custom topics and prompts
-- **Scheduled Posts** - Set up recurring content generation
+- **Content Scheduling** - Schedule articles for future publication
 - **Analytics Dashboard** - View site performance and content metrics
 - **Newsletter Management** - Track and manage subscribers
 
@@ -38,7 +37,7 @@ A modern news website built with Next.js that creates AI-written news articles f
 
 - **Frontend**: Next.js 14, React 18, TypeScript, Tailwind CSS
 - **Backend**: Next.js API Routes, MongoDB with Mongoose
-- **AI Integration**: OpenAI GPT-4 API
+- **Content Tools**: Advanced content management system
 - **Content Editor**: ReactQuill
 - **Scheduling**: Node-cron
 - **Authentication**: JWT (ready for expansion)
@@ -61,20 +60,18 @@ A modern news website built with Next.js that creates AI-written news articles f
    Copy `.env.local` and configure:
    ```env
    # Database
-   MONGODB_URI=mongodb://localhost:27017/leftist-news
-
-   # OpenAI API
-   OPENAI_API_KEY=your_openai_api_key_here
+   MONGODB_URI=mongodb://localhost:27017/peoples-thread
 
    # JWT Secret
    JWT_SECRET=your_jwt_secret_here
 
    # Google AdSense
-   ADSENSE_CLIENT_ID=your_adsense_client_id_here
+   NEXT_PUBLIC_ADSENSE_CLIENT_ID=your_adsense_client_id_here
 
    # Next.js
    NEXTAUTH_URL=http://localhost:3000
    NEXTAUTH_SECRET=your_nextauth_secret_here
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
    ```
 
 4. **Set up MongoDB**

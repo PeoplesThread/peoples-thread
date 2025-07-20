@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useAuth } from '@/lib/useAuth'
 import ArticleManager from '@/components/admin/ArticleManager'
-import AIGenerator from '@/components/admin/AIGenerator'
+
 import ScheduledPosts from '@/components/admin/ScheduledPosts'
 import Analytics from '@/components/admin/Analytics'
 import LoginForm from '@/components/admin/LoginForm'
@@ -15,7 +15,6 @@ const AdminDashboard = () => {
 
   const tabs = [
     { id: 'articles', name: 'Manage Articles', icon: '📝' },
-    { id: 'ai-generator', name: 'AI Generator', icon: '🤖' },
     { id: 'scheduled', name: 'Scheduled Posts', icon: '⏰' },
     { id: 'analytics', name: 'Analytics', icon: '📊' },
   ]
@@ -33,8 +32,6 @@ const AdminDashboard = () => {
     switch (activeTab) {
       case 'articles':
         return <ArticleManager />
-      case 'ai-generator':
-        return <AIGenerator />
       case 'scheduled':
         return <ScheduledPosts />
       case 'analytics':
@@ -108,7 +105,7 @@ const AdminDashboard = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Navigation Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -139,7 +136,6 @@ const AdminDashboard = () => {
                       : 'text-slate-500 dark:text-slate-400'
                   }`}>
                     {tab.id === 'articles' && 'Manage content'}
-                    {tab.id === 'ai-generator' && 'Create with AI'}
                     {tab.id === 'scheduled' && 'Automation'}
                     {tab.id === 'analytics' && 'Insights & data'}
                   </p>
