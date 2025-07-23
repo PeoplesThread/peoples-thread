@@ -25,30 +25,60 @@ const FeaturedArticles = () => {
     fetchFeaturedArticles()
   }, [])
 
-  const fetchFeaturedArticles = async () => {
+  const fetchFeaturedArticles = async (attempt = 0) => {
+    const maxRetries = 2
+    const baseDelay = 1000
+    
     try {
-      const response = await fetch('/api/articles?featured=true&limit=6')
+      // Create AbortController for timeout
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 3000) // 3 second timeout
+      
+      const response = await fetch('/api/articles?featured=true&limit=6', {
+        signal: controller.signal
+      })
+      
+      clearTimeout(timeoutId)
+      
       if (response.ok) {
         const data = await response.json()
-        setArticles(data.articles)
+        setArticles(data.articles || [])
+        return // Success - exit retry loop
+      } else {
+        throw new Error(`HTTP ${response.status}`)
       }
-    } catch (error) {
-      console.error('Error fetching featured articles:', error)
+    } catch (error: any) {
+      console.error(`Error fetching featured articles (attempt ${attempt + 1}):`, error)
+      
+      // If we haven't exceeded max retries, try again
+      if (attempt < maxRetries && error.name !== 'AbortError') {
+        const delay = baseDelay * Math.pow(2, attempt)
+        
+        setTimeout(() => {
+          fetchFeaturedArticles(attempt + 1)
+        }, delay)
+        return
+      }
+      
+      // All retries exhausted or timeout - just show empty state
+      console.error('Failed to fetch featured articles after retries')
     } finally {
-      setLoading(false)
+      if (attempt === 0) { // Only set loading false on the first attempt
+        setLoading(false)
+      }
     }
   }
 
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'politics':
-        return 'bg-navy-100 text-thread-navy'
+        return 'bg-red-50 text-pbs-politics border border-red-100'
       case 'social-justice':
-        return 'bg-primary-100 text-thread-blue'
+        return 'bg-blue-50 text-pbs-social-justice border border-blue-100'
       case 'labor':
-        return 'bg-navy-200 text-thread-dark-navy'
+        return 'bg-green-50 text-pbs-labor border border-green-100'
       default:
-        return 'bg-navy-50 text-navy-800'
+        return 'bg-pbs-gray-100 text-pbs-gray-700 border border-pbs-gray-200'
     }
   }
 
@@ -88,14 +118,16 @@ const FeaturedArticles = () => {
 
   return (
     <section className="mb-12">
-      <h2 className="text-3xl font-bold mb-8 text-navy-900 font-serif border-b-2 border-thread-navy pb-2">Featured Stories</h2>
+      <h2 className="text-2xl font-headline font-bold mb-8 text-pbs-gray-900 border-b border-pbs-gray-200 pb-3">
+        Featured Stories
+      </h2>
       
       {articles.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-navy-600">No featured articles available yet.</p>
+        <div className="text-center py-12 bg-white border border-pbs-gray-200">
+          <p className="text-pbs-gray-600 font-sans">No featured articles available yet.</p>
           <Link 
             href="/admin" 
-            className="inline-block mt-4 bg-thread-navy text-white px-6 py-2 rounded-md hover:bg-thread-dark-navy transition-colors"
+            className="inline-block mt-4 bg-pbs-blue text-white px-6 py-2 font-sans font-medium hover:bg-pbs-dark-blue transition-colors"
           >
             Create Your First Article
           </Link>
@@ -103,45 +135,47 @@ const FeaturedArticles = () => {
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((article) => (
-            <article key={article._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <article key={article._id} className="bg-white border border-pbs-gray-200 overflow-hidden hover:shadow-md transition-shadow">
               <Link href={`/article/${article.slug}`}>
-                <div className="relative h-48 bg-gray-200">
+                <div className="relative h-48 bg-pbs-gray-100">
                   {article.featuredImage ? (
                     <Image
                       src={article.featuredImage}
                       alt={article.title}
                       fill
                       className="object-cover"
+                      loading="lazy"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-thread-navy to-thread-dark-navy">
-                      <span className="text-white text-4xl font-bold font-serif">PT</span>
+                    <div className="w-full h-full flex items-center justify-center bg-pbs-blue">
+                      <span className="text-white text-3xl font-headline font-bold">PT</span>
                     </div>
                   )}
                 </div>
               </Link>
               
-              <div className="p-6">
+              <div className="p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(article.category)}`}>
+                  <span className={`px-2 py-1 text-xs font-sans font-medium ${getCategoryColor(article.category)}`}>
                     {getCategoryName(article.category)}
                   </span>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-pbs-gray-500 font-sans">
                     {article.views} views
                   </span>
                 </div>
                 
                 <Link href={`/article/${article.slug}`}>
-                  <h3 className="text-xl font-semibold mb-3 text-gray-900 hover:text-leftist-red transition-colors line-clamp-2">
+                  <h3 className="text-lg font-headline font-bold mb-3 text-pbs-gray-900 hover:text-pbs-blue transition-colors line-clamp-2 leading-tight">
                     {article.title}
                   </h3>
                 </Link>
                 
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                <p className="text-pbs-gray-600 text-sm font-sans mb-4 line-clamp-3 leading-relaxed">
                   {article.excerpt}
                 </p>
                 
-                <div className="flex items-center justify-between text-xs text-gray-500">
+                <div className="flex items-center justify-between text-xs text-pbs-gray-500 font-sans">
                   <span>By {article.author}</span>
                   <span>{format(new Date(article.publishedAt), 'MMM d, yyyy')}</span>
                 </div>

@@ -1,31 +1,105 @@
 import { NextRequest, NextResponse } from 'next/server'
 import dbConnect from '@/lib/mongodb'
 import Article from '@/models/Article'
+import fs from 'fs'
+import path from 'path'
+
+const articlesFilePath = path.join(process.cwd(), 'data', 'articles.json')
+
+// Helper function to read articles from file
+function readArticlesFromFile() {
+  try {
+    if (fs.existsSync(articlesFilePath)) {
+      const data = fs.readFileSync(articlesFilePath, 'utf8')
+      return JSON.parse(data)
+    }
+    return []
+  } catch (error) {
+    console.error('Error reading articles file:', error)
+    return []
+  }
+}
+
+// Helper function to write articles to file
+function writeArticlesToFile(articles: any[]) {
+  try {
+    fs.writeFileSync(articlesFilePath, JSON.stringify(articles, null, 2))
+    return true
+  } catch (error) {
+    console.error('Error writing articles file:', error)
+    return false
+  }
+}
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { slug: string } }
 ) {
   try {
-    await dbConnect()
+    console.log('Fetching article with slug:', params.slug)
     
-    const articles = await Article.aggregate([
-      { $match: { slug: params.slug, published: true } }
-    ])
-    const article = articles[0]
+    // Try database first, fallback to file system
+    try {
+      await Promise.race([
+        dbConnect(),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Database connection timeout')), 3000)
+        )
+      ])
+      
+      console.log('Database connected, fetching article from MongoDB')
+      
+      const articles = await Article.aggregate([
+        { $match: { slug: params.slug, published: true } }
+      ])
+      const article = articles[0]
 
-    if (!article) {
-      return NextResponse.json(
-        { message: 'Article not found' },
-        { status: 404 }
-      )
+      if (!article) {
+        return NextResponse.json(
+          { message: 'Article not found' },
+          { status: 404 }
+        )
+      }
+
+      // Increment view count
+      await (Article as any).updateOne({ _id: article._id }, { $inc: { views: 1 } })
+
+      return NextResponse.json({ 
+        article: {
+          ...article,
+          _id: article._id.toString(),
+          publishedAt: article.publishedAt?.toISOString(),
+          createdAt: article.createdAt.toISOString(),
+          updatedAt: article.updatedAt.toISOString()
+        },
+        source: 'database'
+      })
+      
+    } catch (dbError) {
+      console.log('Database unavailable, using file system fallback for article')
+      
+      // Fallback to file system
+      const articles = readArticlesFromFile()
+      const article = articles.find((a: any) => a.slug === params.slug && a.published)
+      
+      if (!article) {
+        return NextResponse.json(
+          { message: 'Article not found' },
+          { status: 404 }
+        )
+      }
+      
+      // Increment view count in file system
+      article.views = (article.views || 0) + 1
+      writeArticlesToFile(articles)
+      
+      return NextResponse.json({ 
+        article: article,
+        source: 'filesystem'
+      })
     }
-
-    // Increment view count
-    await (Article as any).updateOne({ _id: article._id }, { $inc: { views: 1 } })
-
-    return NextResponse.json({ article })
-  } catch (error) {
+    
+  } catch (error: any) {
     console.error('Error fetching article:', error)
     return NextResponse.json(
       { message: 'Internal server error' },

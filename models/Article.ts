@@ -5,18 +5,31 @@ export interface IArticle extends Document {
   slug: string
   content: string
   excerpt: string
-  category: 'politics' | 'social-justice' | 'labor'
+  category: 'politics' | 'social-justice' | 'labor' | 'environment' | 'economy' | 'healthcare' | 'education' | 'technology'
   tags: string[]
   author: string
   featuredImage?: string
   published: boolean
   featured: boolean
-  aiGenerated: boolean
+
+  sourceUrl?: string
+  sourceTitle?: string
   publishedAt?: Date
   createdAt: Date
   updatedAt: Date
   views: number
   likes: number
+  // New fields for enhanced customization
+  metaDescription?: string
+  readingTime?: string
+  difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert'
+  priority: 'low' | 'normal' | 'high' | 'urgent'
+  socialTitle?: string
+  socialDescription?: string
+  enableComments: boolean
+  enableNewsletter: boolean
+  customCSS?: string
+  customJS?: string
 }
 
 const ArticleSchema = new Schema<IArticle>({
@@ -44,7 +57,7 @@ const ArticleSchema = new Schema<IArticle>({
   category: {
     type: String,
     required: true,
-    enum: ['politics', 'social-justice', 'labor']
+    enum: ['politics', 'social-justice', 'labor', 'environment', 'economy', 'healthcare', 'education', 'technology']
   },
   tags: [{
     type: String,
@@ -66,9 +79,12 @@ const ArticleSchema = new Schema<IArticle>({
     type: Boolean,
     default: false
   },
-  aiGenerated: {
-    type: Boolean,
-    default: false
+
+  sourceUrl: {
+    type: String
+  },
+  sourceTitle: {
+    type: String
   },
   publishedAt: {
     type: Date
@@ -80,6 +96,46 @@ const ArticleSchema = new Schema<IArticle>({
   likes: {
     type: Number,
     default: 0
+  },
+  // New enhanced fields
+  metaDescription: {
+    type: String,
+    maxlength: 160
+  },
+  readingTime: {
+    type: String
+  },
+  difficulty: {
+    type: String,
+    enum: ['beginner', 'intermediate', 'advanced', 'expert'],
+    default: 'beginner'
+  },
+  priority: {
+    type: String,
+    enum: ['low', 'normal', 'high', 'urgent'],
+    default: 'normal'
+  },
+  socialTitle: {
+    type: String,
+    maxlength: 60
+  },
+  socialDescription: {
+    type: String,
+    maxlength: 160
+  },
+  enableComments: {
+    type: Boolean,
+    default: true
+  },
+  enableNewsletter: {
+    type: Boolean,
+    default: true
+  },
+  customCSS: {
+    type: String
+  },
+  customJS: {
+    type: String
   }
 }, {
   timestamps: true

@@ -1,0 +1,23 @@
+[
+  {
+    "_id": "admin-main-001",
+    "username": "admin",
+    "email": "admin@peoplesthread.com",
+    "password": "$2a$12$m.GnMN5Aa7EFU4odj1uu0.FJGINY4cfRZO0526CpCeHCiY4iVFdgK",
+    "name": "Main Administrator",
+    "role": "admin",
+    "bio": "Main administrator account for Peoples Thread",
+    "isActive": true,
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z",
+    "permissions": {
+      "canCreateArticles": true,
+      "canEditOwnArticles": true,
+      "canEditAllArticles": true,
+      "canDeleteArticles": true,
+      "canManageUsers": true,
+      "canPublishArticles": true,
+      "canManageSettings": true
+    }
+  }
+]

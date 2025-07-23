@@ -16,35 +16,110 @@ const Newsletter = mongoose.models.Newsletter || mongoose.model('Newsletter', Ne
 // Temporarily remove auth for debugging
 export async function GET(request: NextRequest) {
   try {
-    await dbConnect()
+    console.log('Analytics API called')
+    
+    // Connect to database with timeout handling
+    await Promise.race([
+      dbConnect(),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database connection timeout')), 8000)
+      )
+    ])
+    
+    console.log('Database connected for analytics')
     
     const { searchParams } = new URL(request.url)
     const days = parseInt(searchParams.get('days') || '30')
     const dateFrom = new Date()
     dateFrom.setDate(dateFrom.getDate() - days)
 
-    // Basic article stats
-    const totalArticles = await Article.countDocuments({})
-    const publishedArticles = await Article.countDocuments({ published: true })
-    const draftArticles = await Article.countDocuments({ published: false })
-    const aiGeneratedArticles = await Article.countDocuments({ aiGenerated: true })
+    console.log(`Fetching analytics for last ${days} days`)
 
-    // Total views
-    const viewsResult = await Article.aggregate([
-      { $match: { published: true } },
-      { $group: { _id: null, totalViews: { $sum: '$views' } } }
-    ])
+    // Execute all database operations with timeout handling
+    const analyticsData = await Promise.race([
+      Promise.all([
+        // Basic article stats
+        Article.countDocuments({}),
+        Article.countDocuments({ published: true }),
+        Article.countDocuments({ published: false }),
+
+        
+        // Total views
+        Article.aggregate([
+          { $match: { published: true } },
+          { $group: { _id: null, totalViews: { $sum: '$views' } } }
+        ]),
+        
+        // Newsletter subscribers
+        Newsletter.countDocuments({ isActive: true }),
+        
+        // Category stats
+        Article.aggregate([
+          { $match: { published: true } },
+          { $group: { _id: '$category', count: { $sum: 1 } } },
+          { $sort: { count: -1 } }
+        ]),
+        
+        // Top articles by views
+        Article.aggregate([
+          { $match: { published: true } },
+          { $sort: { views: -1 } },
+          { $limit: 10 },
+          { $project: { title: 1, slug: 1, views: 1, category: 1 } }
+        ]),
+        
+        // Recent activity
+        Article.aggregate([
+          {
+            $match: {
+              published: true,
+              publishedAt: { $gte: dateFrom }
+            }
+          },
+          {
+            $group: {
+              _id: {
+                $dateToString: {
+                  format: '%Y-%m-%d',
+                  date: '$publishedAt'
+                }
+              },
+              articles: { $sum: 1 },
+              views: { $sum: '$views' }
+            }
+          },
+          {
+            $sort: { _id: 1 }
+          },
+          {
+            $project: {
+              date: '$_id',
+              articles: 1,
+              views: 1,
+              _id: 0
+            }
+          }
+        ])
+      ]),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database query timeout')), 12000)
+      )
+    ]) as [number, number, number, any[], number, any[], any[], any[]]
+
+    const [
+      totalArticles,
+      publishedArticles,
+      draftArticles,
+      viewsResult,
+      newsletterSubscribers,
+      categoryStats,
+      topArticles,
+      recentActivity
+    ] = analyticsData
+
+    console.log('Analytics queries completed successfully')
+
     const totalViews = viewsResult[0]?.totalViews || 0
-
-    // Newsletter subscribers
-    const newsletterSubscribers = await Newsletter.countDocuments({ isActive: true })
-
-    // Category stats
-    const categoryStats = await Article.aggregate([
-      { $match: { published: true } },
-      { $group: { _id: '$category', count: { $sum: 1 } } },
-      { $sort: { count: -1 } }
-    ])
 
     const categoryStatsObj = {
       politics: 0,
@@ -57,47 +132,6 @@ export async function GET(request: NextRequest) {
         categoryStatsObj[stat._id as keyof typeof categoryStatsObj] = stat.count
       }
     })
-
-    // Top articles by views
-    const topArticles = await Article.aggregate([
-      { $match: { published: true } },
-      { $sort: { views: -1 } },
-      { $limit: 10 },
-      { $project: { title: 1, slug: 1, views: 1, category: 1 } }
-    ])
-
-    // Recent activity (articles published per day)
-    const recentActivity = await Article.aggregate([
-      {
-        $match: {
-          published: true,
-          publishedAt: { $gte: dateFrom }
-        }
-      },
-      {
-        $group: {
-          _id: {
-            $dateToString: {
-              format: '%Y-%m-%d',
-              date: '$publishedAt'
-            }
-          },
-          articles: { $sum: 1 },
-          views: { $sum: '$views' }
-        }
-      },
-      {
-        $sort: { _id: 1 }
-      },
-      {
-        $project: {
-          date: '$_id',
-          articles: 1,
-          views: 1,
-          _id: 0
-        }
-      }
-    ])
 
     // Fill in missing dates with zero values
     const filledActivity = []
@@ -122,17 +156,32 @@ export async function GET(request: NextRequest) {
       publishedArticles,
       draftArticles,
       totalViews,
-      aiGeneratedArticles,
       newsletterSubscribers,
       categoryStats: categoryStatsObj,
       topArticles,
       recentActivity: filledActivity.slice(-30) // Last 30 days
     })
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching analytics:', error)
+    
+    // Provide more specific error messages
+    let errorMessage = 'Internal server error'
+    if (error.message.includes('timeout')) {
+      errorMessage = 'Database connection timeout'
+    } else if (error.name === 'MongoNetworkError') {
+      errorMessage = 'Database network error'
+    } else if (error.name === 'MongoServerSelectionError') {
+      errorMessage = 'Database server unavailable'
+    }
+    
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { 
+        success: false,
+        error: errorMessage,
+        message: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      },
       { status: 500 }
     )
   }

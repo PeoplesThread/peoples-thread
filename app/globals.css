@@ -2,63 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
+/* PBS NewsHour inspired typography */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&display=swap');
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+  /* PBS NewsHour color palette */
+  --pbs-blue: #1f4e79;
+  --pbs-dark-blue: #1a3f66;
+  --pbs-red: #dc2626;
+  --pbs-gray-50: #f9fafb;
+  --pbs-gray-100: #f3f4f6;
+  --pbs-gray-200: #e5e7eb;
+  --pbs-gray-300: #d1d5db;
+  --pbs-gray-400: #9ca3af;
+  --pbs-gray-500: #6b7280;
+  --pbs-gray-600: #4b5563;
+  --pbs-gray-700: #374151;
+  --pbs-gray-800: #1f2937;
+  --pbs-gray-900: #111827;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: #ffffff;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--pbs-gray-900);
+  background: #fafafa;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
+  font-size: 16px;
 }
 
-/* Socialist/Working Class inspired typography */
-.socialist-headline {
+/* PBS NewsHour inspired typography classes */
+.pbs-headline {
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: 700;
   line-height: 1.2;
-  color: #dc2626;
+  color: var(--pbs-gray-900);
 }
 
-.socialist-subhead {
-  font-family: 'Inter', sans-serif;
+.pbs-subhead {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-weight: 600;
-  color: #374151;
+  color: var(--pbs-gray-700);
   line-height: 1.4;
 }
 
-.socialist-body {
-  font-family: 'Inter', sans-serif;
+.pbs-body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-weight: 400;
-  color: #374151;
+  color: var(--pbs-gray-700);
   line-height: 1.6;
 }
 
-/* Custom styles for the news website */
+/* PBS NewsHour inspired article content styles */
 .article-content {
   @apply prose prose-lg max-w-none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .article-content blockquote {
-  @apply border-l-4 border-thread-navy;
+  @apply border-l-4 border-pbs-blue;
 }
 
 .article-content a {
-  @apply text-thread-navy hover:text-thread-dark-navy;
+  @apply text-pbs-blue hover:text-pbs-dark-blue;
 }
 
 /* Line clamp utilities */
@@ -77,23 +82,25 @@ body {
 }
 
 .article-content h1 {
-  @apply text-3xl font-bold mb-4 text-navy-900 font-serif;
+  font-family: Georgia, 'Times New Roman', serif;
+  @apply text-3xl font-bold mb-4 text-pbs-gray-900;
 }
 
 .article-content h2 {
-  @apply text-2xl font-semibold mb-3 text-navy-800 font-serif;
+  font-family: Georgia, 'Times New Roman', serif;
+  @apply text-2xl font-semibold mb-3 text-pbs-gray-800;
 }
 
 .article-content h3 {
-  @apply text-xl font-medium mb-2 text-navy-700;
+  @apply text-xl font-medium mb-2 text-pbs-gray-700;
 }
 
 .article-content p {
-  @apply mb-4 text-navy-700 leading-relaxed;
+  @apply mb-4 text-pbs-gray-700 leading-relaxed;
 }
 
 .article-content blockquote {
-  @apply border-l-4 border-thread-navy pl-4 italic text-navy-600 my-4 bg-navy-50 py-2;
+  @apply border-l-4 border-pbs-blue pl-4 italic text-pbs-gray-600 my-4 bg-pbs-gray-50 py-2;
 }
 
 .article-content ul, .article-content ol {
@@ -101,11 +108,11 @@ body {
 }
 
 .article-content li {
-  @apply mb-2 text-navy-700;
+  @apply mb-2 text-pbs-gray-700;
 }
 
 .article-content a {
-  @apply text-thread-navy hover:text-thread-dark-navy underline;
+  @apply text-pbs-blue hover:text-pbs-dark-blue underline;
 }
 
 /* AdSense responsive styles */

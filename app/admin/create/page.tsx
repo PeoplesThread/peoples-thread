@@ -2,14 +2,9 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import dynamic from 'next/dynamic'
 import toast from 'react-hot-toast'
 import { useAuth } from '@/lib/useAuth'
 import LoginForm from '@/components/admin/LoginForm'
-
-// Dynamically import ReactQuill to avoid SSR issues
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
-import 'react-quill/dist/quill.snow.css'
 
 const CreateArticle = () => {
   const router = useRouter()
@@ -30,25 +25,15 @@ const CreateArticle = () => {
   const categories = [
     { value: 'politics', label: 'Politics & Government' },
     { value: 'social-justice', label: 'Social Justice & Civil Rights' },
-    { value: 'labor', label: 'Labor & Workers\' Rights' }
+    { value: 'labor', label: 'Labor & Workers\' Rights' },
+    { value: 'environment', label: 'Environment & Climate' },
+    { value: 'economy', label: 'Economy & Finance' },
+    { value: 'healthcare', label: 'Healthcare' },
+    { value: 'education', label: 'Education' },
+    { value: 'technology', label: 'Technology & Privacy' }
   ]
 
-  const quillModules = {
-    toolbar: [
-      [{ 'header': [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      ['blockquote', 'code-block'],
-      ['link', 'image'],
-      ['clean']
-    ],
-  }
-
-  const quillFormats = [
-    'header', 'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet', 'blockquote', 'code-block',
-    'link', 'image'
-  ]
+  const [showMarkdownHelp, setShowMarkdownHelp] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent, shouldPublish: boolean = false) => {
     e.preventDefault()
@@ -227,19 +212,61 @@ const CreateArticle = () => {
 
             {/* Content Editor */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Content *
-              </label>
-              <div className="border border-gray-300 rounded-md">
-                <ReactQuill
-                  theme="snow"
-                  value={content}
-                  onChange={setContent}
-                  modules={quillModules}
-                  formats={quillFormats}
-                  placeholder="Write your article content here..."
-                />
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Content * (Markdown supported)
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowMarkdownHelp(!showMarkdownHelp)}
+                  className="text-sm text-blue-600 hover:text-blue-800 underline"
+                >
+                  {showMarkdownHelp ? 'Hide' : 'Show'} Markdown Help
+                </button>
               </div>
+              
+              {showMarkdownHelp && (
+                <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
+                  <h4 className="font-medium text-blue-900 mb-2">Markdown Formatting Guide:</h4>
+                  <div className="text-sm text-blue-800 space-y-1">
+                    <div><code># Heading 1</code> → <strong>Large heading</strong></div>
+                    <div><code>## Heading 2</code> → <strong>Medium heading</strong></div>
+                    <div><code>### Heading 3</code> → <strong>Small heading</strong></div>
+                    <div><code>**bold text**</code> → <strong>bold text</strong></div>
+                    <div><code>*italic text*</code> → <em>italic text</em></div>
+                    <div><code>[link text](https://example.com)</code> → <span className="text-blue-600 underline">link text</span></div>
+                    <div><code>- List item</code> → • List item</div>
+                    <div><code>1. Numbered item</code> → 1. Numbered item</div>
+                    <div><code>&gt; Quote text</code> → Blockquote</div>
+                    <div><code>---</code> → Horizontal line</div>
+                    <div><code>`inline code`</code> → <code className="bg-gray-100 px-1 rounded">inline code</code></div>
+                  </div>
+                </div>
+              )}
+              
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="Write your article content here using Markdown formatting...
+
+Example:
+# Main Heading
+
+This is a paragraph with **bold text** and *italic text*.
+
+## Subheading
+
+- Bullet point 1
+- Bullet point 2
+
+> This is a quote
+
+[Link to source](https://example.com)"
+                rows={20}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-leftist-red font-mono text-sm"
+                required
+                disabled={loading}
+              />
             </div>
 
             {/* Excerpt */}

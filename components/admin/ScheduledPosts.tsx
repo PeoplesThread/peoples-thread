@@ -185,14 +185,22 @@ const ScheduledPosts = () => {
   }
 
   return (
-    <div className="p-6">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Scheduled Posts</h2>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Scheduled Posts</h2>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+            Automate your content publishing with AI-generated articles
+          </p>
+        </div>
         <button
           onClick={() => setShowCreateForm(true)}
-          className="bg-leftist-red text-white px-4 py-2 rounded-md hover:bg-leftist-darkred transition-colors"
+          className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-thread-navy to-blue-600 text-white text-sm font-medium rounded-lg hover:from-thread-navy hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-sm hover:shadow-md"
         >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
           Schedule New Post
         </button>
       </div>
@@ -309,91 +317,142 @@ const ScheduledPosts = () => {
 
       {/* Scheduled Posts List */}
       {scheduledPosts.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-600 mb-4">No scheduled posts yet.</p>
+        <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-200/60 dark:border-slate-700/60 p-12 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center">
+            <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-2">No scheduled posts yet</h3>
+          <p className="text-slate-600 dark:text-slate-400 mb-6">
+            Start automating your content creation by scheduling your first AI-generated post.
+          </p>
           <button
             onClick={() => setShowCreateForm(true)}
-            className="bg-leftist-red text-white px-6 py-2 rounded-md hover:bg-leftist-darkred transition-colors"
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-thread-navy to-blue-600 text-white font-medium rounded-lg hover:from-thread-navy hover:to-blue-700 transition-all duration-200 shadow-sm hover:shadow-md"
           >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
             Schedule Your First Post
           </button>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Topic
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Category
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Scheduled For
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+        <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-200/60 dark:border-slate-700/60 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-slate-200/60 dark:divide-slate-700/60">
+              <thead className="bg-slate-50/50 dark:bg-slate-700/50">
+                <tr>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                    Topic
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                    Category
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                    Scheduled For
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white/30 dark:bg-slate-800/30 divide-y divide-slate-200/40 dark:divide-slate-700/40">
               {scheduledPosts.map((post) => (
-                <tr key={post._id} className="hover:bg-gray-50">
+                <tr key={post._id} className="hover:bg-white/60 dark:hover:bg-slate-700/60 transition-colors duration-200">
                   <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900">
-                      {post.topic}
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0">
+                        <div className="w-10 h-10 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 rounded-lg flex items-center justify-center">
+                          <svg className="w-5 h-5 text-slate-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-slate-900 dark:text-white mb-1">
+                          {post.topic}
+                        </div>
+                        {post.customPrompt && (
+                          <div className="flex items-center text-sm text-slate-500 dark:text-slate-400 mb-1">
+                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                            Custom prompt provided
+                          </div>
+                        )}
+                        {post.errorMessage && (
+                          <div className="flex items-center text-sm text-red-600 dark:text-red-400">
+                            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Error: {post.errorMessage}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    {post.customPrompt && (
-                      <div className="text-sm text-gray-500 mt-1">
-                        Custom prompt provided
-                      </div>
-                    )}
-                    {post.errorMessage && (
-                      <div className="text-sm text-red-600 mt-1">
-                        Error: {post.errorMessage}
-                      </div>
-                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCategoryColor(post.category)}`}>
-                      {post.category}
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(post.category)}`}>
+                      {post.category.replace('-', ' ')}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {format(new Date(post.scheduledFor), 'MMM d, yyyy HH:mm')}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center text-sm text-slate-900 dark:text-white">
+                      <svg className="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      {format(new Date(post.scheduledFor), 'MMM d, yyyy HH:mm')}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(post.status)}`}>
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(post.status)}`}>
+                      <div className={`w-2 h-2 rounded-full mr-2 ${
+                        post.status === 'completed' ? 'bg-green-500' :
+                        post.status === 'generating' ? 'bg-blue-500' :
+                        post.status === 'failed' ? 'bg-red-500' : 'bg-yellow-500'
+                      }`}></div>
                       {post.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                    {post.status === 'pending' && (
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center space-x-2">
+                      {post.status === 'pending' && (
+                        <button
+                          onClick={() => executeNow(post._id)}
+                          className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/30 rounded-lg hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors duration-200"
+                        >
+                          <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          Execute Now
+                        </button>
+                      )}
+                      {post.articleId && (
+                        <a
+                          href={`/admin/edit/${post.articleId}`}
+                          className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/30 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors duration-200"
+                        >
+                          <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                          View Article
+                        </a>
+                      )}
                       <button
-                        onClick={() => executeNow(post._id)}
-                        className="text-green-600 hover:text-green-900"
+                        onClick={() => deleteScheduledPost(post._id)}
+                        className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/30 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors duration-200"
                       >
-                        Execute Now
+                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Delete
                       </button>
-                    )}
-                    {post.articleId && (
-                      <a
-                        href={`/admin/edit/${post.articleId}`}
-                        className="text-indigo-600 hover:text-indigo-900"
-                      >
-                        View Article
-                      </a>
-                    )}
-                    <button
-                      onClick={() => deleteScheduledPost(post._id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -403,15 +462,47 @@ const ScheduledPosts = () => {
       )}
 
       {/* Info Box */}
-      <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h4 className="font-semibold text-blue-900 mb-2">Automated Content Generation:</h4>
-        <ul className="text-sm text-blue-800 space-y-1">
-          <li>• Posts are automatically generated and published at the scheduled time</li>
-          <li>• Recurring posts will create new content based on the same topic and category</li>
-          <li>• Failed generations can be retried manually</li>
-          <li>• All generated content is marked as AI-generated for transparency</li>
-          <li>• You can edit generated articles before they go live</li>
-        </ul>
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200/60 dark:border-blue-700/60 rounded-xl p-6 backdrop-blur-sm">
+        <div className="flex items-center mb-4">
+          <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg mr-3">
+            <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h4 className="font-semibold text-blue-900 dark:text-blue-100">Automated Content Generation</h4>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex items-start space-x-3">
+            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+            <span className="text-sm text-blue-800 dark:text-blue-200">
+              Posts are automatically generated and published at the scheduled time
+            </span>
+          </div>
+          <div className="flex items-start space-x-3">
+            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+            <span className="text-sm text-blue-800 dark:text-blue-200">
+              Recurring posts will create new content based on the same topic and category
+            </span>
+          </div>
+          <div className="flex items-start space-x-3">
+            <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+            <span className="text-sm text-blue-800 dark:text-blue-200">
+              Failed generations can be retried manually
+            </span>
+          </div>
+          <div className="flex items-start space-x-3">
+            <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+            <span className="text-sm text-blue-800 dark:text-blue-200">
+              All generated content is marked as AI-generated for transparency
+            </span>
+          </div>
+          <div className="flex items-start space-x-3 md:col-span-2">
+            <div className="w-2 h-2 bg-indigo-500 rounded-full mt-2 flex-shrink-0"></div>
+            <span className="text-sm text-blue-800 dark:text-blue-200">
+              You can edit generated articles before they go live using the Draft Editor
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   )

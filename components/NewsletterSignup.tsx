@@ -41,33 +41,33 @@ const NewsletterSignup = () => {
   }
 
   return (
-    <section className="bg-gradient-to-r from-leftist-red to-leftist-darkred text-white p-8 rounded-lg mb-12">
+    <section className="bg-white border border-pbs-gray-200 p-8 mb-12">
       <div className="max-w-2xl mx-auto text-center">
-        <h2 className="text-3xl font-bold mb-4">Stay Informed</h2>
-        <p className="text-xl mb-6 opacity-90">
-          Get the latest progressive news and analysis delivered straight to your inbox
+        <h2 className="text-2xl font-headline font-bold mb-4 text-pbs-gray-900">Stay Informed</h2>
+        <p className="text-lg mb-6 text-pbs-gray-700 font-sans leading-relaxed">
+          Subscribe to our newsletter for the latest news and analysis
         </p>
         
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email address"
-            className="flex-1 px-4 py-3 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+            className="flex-1 px-4 py-3 border border-pbs-gray-300 text-pbs-gray-900 font-sans focus:outline-none focus:ring-2 focus:ring-pbs-blue focus:border-pbs-blue"
             disabled={loading}
           />
           <button
             type="submit"
             disabled={loading}
-            className="bg-white text-leftist-red px-6 py-3 rounded-md font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-pbs-blue text-white px-6 py-3 font-sans font-medium hover:bg-pbs-dark-blue transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Subscribing...' : 'Subscribe'}
           </button>
         </form>
         
-        <p className="text-sm opacity-75 mt-4">
-          Join thousands of readers fighting for justice and equality. Unsubscribe anytime.
+        <p className="text-sm text-pbs-gray-500 font-sans mt-4">
+          Join our community of informed readers. Unsubscribe anytime.
         </p>
       </div>
     </section>

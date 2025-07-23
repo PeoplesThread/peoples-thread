@@ -19,22 +19,40 @@ const AdBanner: React.FC<AdBannerProps> = ({
 
   useEffect(() => {
     if (typeof window !== 'undefined' && adsenseId) {
-      try {
-        // @ts-ignore
-        (window.adsbygoogle = window.adsbygoogle || []).push({})
-      } catch (err) {
-        console.error('AdSense error:', err)
-      }
+      // Delay AdSense initialization to not block page rendering
+      const timer = setTimeout(() => {
+        try {
+          // @ts-ignore
+          (window.adsbygoogle = window.adsbygoogle || []).push({})
+        } catch (err) {
+          console.error('AdSense error:', err)
+        }
+      }, 100) // Small delay to let page render first
+      
+      return () => clearTimeout(timer)
     }
-  }, [adsenseId, slot]) // Added slot to dependencies to re-trigger when slot changes
+  }, [adsenseId, slot])
 
   if (!adsenseId) {
-    // Show placeholder when AdSense is not configured
+    // Subtle placeholder that doesn't interfere with reading
+    const getPlaceholderHeight = () => {
+      switch (format) {
+        case 'horizontal':
+          return 'h-20'
+        case 'rectangle':
+          return 'h-48'
+        default:
+          return 'h-24'
+      }
+    }
+
     return (
-      <div className="adsense-container">
-        <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-          <p className="text-gray-500 text-sm">Advertisement Space</p>
-          <p className="text-gray-400 text-xs mt-1">Configure AdSense to show ads</p>
+      <div className="adsense-container my-4">
+        <div className={`bg-gray-50 border border-gray-200 rounded p-4 text-center ${getPlaceholderHeight()} flex items-center justify-center`}>
+          <div>
+            <p className="text-gray-400 text-xs font-sans">Advertisement</p>
+            <p className="text-gray-300 text-xs font-sans mt-1">{slot}</p>
+          </div>
         </div>
       </div>
     )

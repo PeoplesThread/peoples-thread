@@ -13,7 +13,10 @@ const Header = () => {
     { name: 'Home', href: '/' },
     { name: 'Politics', href: '/category/politics' },
     { name: 'Social Justice', href: '/category/social-justice' },
-    { name: 'Labor Rights', href: '/category/labor' },
+    { name: 'Labor', href: '/category/labor' },
+    { name: 'Environment', href: '/category/environment' },
+    { name: 'Economy', href: '/category/economy' },
+    { name: 'Healthcare', href: '/category/healthcare' },
     { name: 'About', href: '/about' },
   ]
 
@@ -23,68 +26,150 @@ const Header = () => {
   }
 
   return (
-    <header className="bg-white shadow-sm border-b-2 border-thread-navy">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center py-6">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-full overflow-hidden">
-              <Image
-                src="/logo.jpg"
-                alt="Peoples Thread Logo"
-                width={48}
-                height={48}
-                className="w-full h-full object-cover"
-              />
+    <header className="bg-white">
+      {/* Top utility bar - PBS style */}
+      <div className="bg-gray-50 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-2 text-sm">
+            <div className="flex items-center space-x-4">
+              <span className="text-gray-600 font-sans">Independent Progressive Journalism</span>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-navy-900 font-serif tracking-tight">Peoples Thread</h1>
-              <p className="text-sm text-navy-600 font-medium">Amplifying working class voices</p>
+            <div className="flex items-center space-x-4">
+              <Link href="/newsletter" className="text-gray-600 hover:text-pbs-blue transition-colors font-sans">
+                Newsletter
+              </Link>
+              <Link href="/support" className="text-pbs-blue hover:text-pbs-dark-blue transition-colors font-sans font-medium">
+                Support Us
+              </Link>
             </div>
-          </Link>
+          </div>
+        </div>
+      </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            {navigation.map((item) => (
+      {/* Main Header - PBS NewsHour style */}
+      <div className="border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            {/* Logo - PBS style with original logo */}
+            <Link href="/" className="flex items-center space-x-4">
+              <div className="w-16 h-16 rounded-sm overflow-hidden">
+                <Image
+                  src="/logo.jpg"
+                  alt="Peoples Thread Logo"
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-cover"
+                  priority
+                />
+              </div>
+              <div>
+                <h1 className="text-4xl font-headline font-bold text-gray-900 tracking-tight leading-none">
+                  Peoples Thread
+                </h1>
+                <div className="flex items-center space-x-2 mt-1">
+                  <div className="w-2 h-2 bg-pbs-blue rounded-full"></div>
+                  <span className="text-sm text-gray-600 font-sans uppercase tracking-wide">
+                    News
+                  </span>
+                </div>
+              </div>
+            </Link>
+
+            {/* Right Side - PBS style */}
+            <div className="flex items-center space-x-6">
+              {/* Search Bar - Desktop */}
+              <div className="hidden lg:block">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="w-80 px-4 py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pbs-blue focus:border-transparent font-sans text-sm bg-gray-50"
+                  />
+                  <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-pbs-blue">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              {/* Mobile menu button */}
+              <button
+                className="lg:hidden p-2 text-gray-700 hover:text-pbs-blue"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Bar - PBS NewsHour style */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="hidden lg:flex items-center py-0">
+            {navigation.map((item, index) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`px-3 py-2 text-sm font-medium transition-colors rounded ${
+                className={`text-sm font-sans font-medium transition-all duration-200 py-4 px-6 border-b-3 relative ${
                   isActive(item.href)
-                    ? 'text-thread-navy bg-navy-50'
-                    : 'text-navy-700 hover:text-thread-navy hover:bg-navy-50'
-                }`}
+                    ? 'text-pbs-blue border-pbs-blue bg-blue-50'
+                    : 'text-gray-700 border-transparent hover:text-pbs-blue hover:border-gray-300 hover:bg-gray-50'
+                } ${index === 0 ? 'pl-0' : ''}`}
               >
                 {item.name}
               </Link>
             ))}
+            
+            {/* More dropdown - PBS style */}
+            <div className="ml-auto flex items-center space-x-4">
+              <div className="text-xs text-gray-500 font-sans uppercase tracking-wide">
+                More
+              </div>
+              <button className="text-gray-400 hover:text-pbs-blue">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
           </nav>
-
-
-
-          {/* Mobile menu button */}
-          <button
-            className="md:hidden p-2 rounded-md text-navy-700 hover:text-thread-navy hover:bg-navy-50"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
         </div>
+      </div>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-navy-200">
-            <nav className="flex flex-col space-y-2">
+      {/* Mobile Navigation - PBS style */}
+      {isMenuOpen && (
+        <div className="lg:hidden bg-white border-b border-gray-200">
+          <div className="px-4 py-4">
+            {/* Mobile Search */}
+            <div className="mb-6">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pbs-blue focus:border-transparent font-sans text-sm bg-gray-50"
+                />
+                <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            {/* Mobile Navigation Links */}
+            <nav className="space-y-0">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  className={`block px-0 py-4 text-base font-sans font-medium border-b border-gray-100 transition-colors ${
                     isActive(item.href)
-                      ? 'text-thread-navy bg-navy-50'
-                      : 'text-navy-700 hover:text-thread-navy hover:bg-navy-50'
+                      ? 'text-pbs-blue'
+                      : 'text-gray-700 hover:text-pbs-blue'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -93,8 +178,8 @@ const Header = () => {
               ))}
             </nav>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </header>
   )
 }
